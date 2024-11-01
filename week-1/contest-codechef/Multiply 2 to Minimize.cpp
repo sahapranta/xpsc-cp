@@ -1,54 +1,7 @@
 #include <bits/stdc++.h>
 
 using namespace std;
-typedef long long int ll;
-
-int cnt(vector<ll> &ar, int n)
-{
-    if (n <= 0)
-    {
-        return 0;
-    }
-
-    if (n < 3)
-    {
-        return n;
-    }
-
-    ll k = ar[n - 1];
-    cout << "K: " << k << endl;
-    bool found = false;
-
-    for (int i = 0; i < n; i++)
-    {
-        if (k == ar[i])
-        {
-            cout << "A[" << i << "] " << ar[i] << endl;
-            ar.erase(ar.begin() + i);
-            ar.pop_back();
-            found = true;
-            break;
-        }
-    }
-
-    if (found)
-    {
-        ll b = k * 2;
-        ar.push_back(b);
-
-        for (auto i : ar)
-        {
-            cout << i << " ";
-        }
-        cout << endl;
-
-        return cnt(ar, ar.size());
-    }
-    else
-    {
-        return ar.size();
-    }
-}
+using ll = long long int;
 
 int main()
 {
@@ -61,23 +14,57 @@ int main()
     {
         int n;
         cin >> n;
-        vector<ll> a;
-        int ans[n];
+
+        vector<ll> a(n);
+        for (int i = 0; i < n; i++)
+        {
+            cin >> a[i];
+        }
+
+        vector<int> ans;
+        map<ll, int> cnt;
 
         for (int i = 0; i < n; i++)
         {
-            ll p;
-            cin >> p;
-            a.push_back(p);
-            ans[i] = cnt(a, a.size());
+            cnt[a[i]]++;
+
+            if (cnt[a[i]] >= 2)
+            {
+                ll val = a[i];
+
+                while (true)
+                {
+                    ll total = cnt[a[i]];
+
+                    if (cnt[val] < 2)
+                    {
+                        break;
+                    }
+
+                    cnt.erase(val);
+
+                    for (int j = 1; j < (total / 2); j++)
+                    {
+                        cnt[2ll * val]++;
+                    }
+
+                    if (total % 2 != 0)
+                    {
+                        cnt[val]++;
+                    }
+
+                    val *= 2;
+                }
+            }
+
+            ans.push_back(cnt.size());
         }
 
-        // for (auto i : ans)
-        // {
-        //     cout << i << " ";
-        // }
-
-        cout << '\n';
+        for (int i : ans)
+        {
+            cout << i << " ";
+        }
+        cout << endl;
     }
 
     return 0;
